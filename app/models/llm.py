@@ -70,7 +70,10 @@ class SwallowLLM:
             raise ValueError("LLMが初期化されていません。initialize()を先に呼び出してください。")
 
         try:
-            response = self._llm.invoke(prompt)
+            # プロンプトをHumanMessageに変換
+            from langchain_core.messages import HumanMessage
+            messages = [HumanMessage(content=prompt)]
+            response = self._llm.invoke(messages)
             return response.content
         except Exception as e:
             raise Exception(f"回答生成に失敗しました: {str(e)}")
