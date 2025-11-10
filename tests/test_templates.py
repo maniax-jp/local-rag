@@ -4,7 +4,7 @@
 
 import pytest
 from langchain_core.documents import Document
-from app.prompts.templates import (
+from prompts.templates import (
     create_rag_prompt,
     format_documents,
     create_prompt_with_context,

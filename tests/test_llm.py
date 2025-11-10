@@ -4,7 +4,7 @@ LLM初期化モジュールのテスト
 
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-from app.models.llm import SwallowLLM, create_llm
+from models.llm import SwallowLLM, create_llm
 
 
 class TestSwallowLLM:

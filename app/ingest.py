@@ -7,11 +7,11 @@ import argparse
 import sys
 from pathlib import Path
 
-from app.config import config
-from app.models.embeddings import create_embeddings
-from app.vector_store.qdrant_client import QdrantVectorStoreManager
-from app.loaders.document_loader import DocumentLoaderManager
-from app.utils.text_splitter import create_text_splitter
+from config import config
+from models.embeddings import create_embeddings
+from vector_store.qdrant_client import QdrantVectorStoreManager
+from loaders.document_loader import DocumentLoaderManager
+from utils.text_splitter import create_text_splitter
 
 
 def main():

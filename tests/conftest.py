@@ -79,7 +79,7 @@ def mock_config(monkeypatch):
     monkeypatch.setenv("CHUNK_OVERLAP", "150")
 
     # 設定を再読み込み
-    from app.config import Config
+    from config import Config
     return Config()
 
 

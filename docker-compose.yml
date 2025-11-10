@@ -13,10 +13,11 @@ services:
       - rag-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   # Qdrantサービス - ベクターデータベース
   qdrant:
@@ -31,10 +32,11 @@ services:
       - rag-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/localhost/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   # RAGアプリケーション
   rag-app:
@@ -45,6 +47,7 @@ services:
     volumes:
       - ./app:/app
       - ./documents:/documents
+      - ./tests:/tests
     env_file:
       - .env
     depends_on:

@@ -8,7 +8,7 @@ from langchain_qdrant import QdrantVectorStore as LangChainQdrantVectorStore
 from langchain_core.documents import Document
 from qdrant_client import QdrantClient as QdrantClientBase
 from qdrant_client.models import Distance, VectorParams
-from app.config import config
+from config import config
 
 
 class QdrantVectorStoreManager:

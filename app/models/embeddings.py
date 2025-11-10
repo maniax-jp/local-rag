@@ -5,7 +5,7 @@ Ollama経由でnomic-embed-textを使用
 
 from typing import List, Optional
 from langchain_ollama import OllamaEmbeddings as LangChainOllamaEmbeddings
-from app.config import config
+from config import config
 
 
 class OllamaEmbeddings:

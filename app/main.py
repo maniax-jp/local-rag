@@ -6,11 +6,11 @@
 import argparse
 import sys
 
-from app.config import config
-from app.models.llm import create_llm
-from app.models.embeddings import create_embeddings
-from app.vector_store.qdrant_client import QdrantVectorStoreManager
-from app.prompts.templates import format_documents, create_prompt_with_context
+from config import config
+from models.llm import create_llm
+from models.embeddings import create_embeddings
+from vector_store.qdrant_client import QdrantVectorStoreManager
+from prompts.templates import format_documents, create_prompt_with_context
 
 
 def interactive_mode(collection_name: str = None, top_k: int = None, temperature: float = None):

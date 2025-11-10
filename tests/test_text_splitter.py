@@ -4,7 +4,7 @@
 
 import pytest
 from langchain_core.documents import Document
-from app.utils.text_splitter import JapaneseTextSplitter, create_text_splitter
+from utils.text_splitter import JapaneseTextSplitter, create_text_splitter
 
 
 class TestJapaneseTextSplitter:

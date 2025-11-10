@@ -5,7 +5,7 @@ Ollama経由でLlama-3-Swallowを使用
 
 from typing import Optional
 from langchain_ollama import ChatOllama
-from app.config import config
+from config import config
 
 
 class SwallowLLM:

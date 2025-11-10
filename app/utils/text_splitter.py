@@ -6,7 +6,7 @@
 from typing import List, Optional
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from app.config import config
+from config import config
 
 
 class JapaneseTextSplitter:

@@ -4,7 +4,7 @@
 
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-from app.models.embeddings import OllamaEmbeddings, create_embeddings
+from models.embeddings import OllamaEmbeddings, create_embeddings
 
 
 class TestOllamaEmbeddings:

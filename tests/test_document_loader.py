@@ -5,7 +5,7 @@
 import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
-from app.loaders.document_loader import DocumentLoaderManager
+from loaders.document_loader import DocumentLoaderManager
 
 
 class TestDocumentLoaderManager:
