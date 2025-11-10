@@ -151,14 +151,24 @@ class TestDocumentLoaderManager:
         assert len(documents) >= 1
         assert all(doc.metadata["file_extension"] in [".txt"] for doc in documents)
 
-    @patch('app.loaders.document_loader.TextLoader')
-    def test_load_document_with_loader_error(self, mock_text_loader, sample_txt_path):
+    def test_load_document_with_loader_error(self, sample_txt_path):
         """ローダーエラー時のテスト"""
-        mock_text_loader.side_effect = Exception("Loader error")
+        # TextLoaderクラスをモックに置き換え
+        mock_loader_class = Mock()
+        mock_loader_instance = Mock()
+        mock_loader_instance.load.side_effect = Exception("Loader error")
+        mock_loader_class.return_value = mock_loader_instance
 
         loader = DocumentLoaderManager()
+        # SUPPORTED_EXTENSIONSの.txtエントリを一時的に置き換え
+        original_loader = loader.SUPPORTED_EXTENSIONS[".txt"]
+        loader.SUPPORTED_EXTENSIONS[".txt"] = mock_loader_class
 
-        with pytest.raises(Exception) as exc_info:
-            loader.load_document(sample_txt_path)
+        try:
+            with pytest.raises(Exception) as exc_info:
+                loader.load_document(sample_txt_path)
 
-        assert "ファイルの読み込みに失敗しました" in str(exc_info.value)
+            assert "ファイルの読み込みに失敗しました" in str(exc_info.value)
+        finally:
+            # 元に戻す
+            loader.SUPPORTED_EXTENSIONS[".txt"] = original_loader

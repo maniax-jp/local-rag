@@ -158,8 +158,12 @@ class QdrantVectorStoreManager:
             類似ドキュメントのリスト
 
         Raises:
+            ValueError: クエリが空の場合
             Exception: 検索に失敗した場合
         """
+        if not query or query.strip() == "":
+            raise ValueError("検索クエリが空です")
+
         k = k or config.rag.top_k
 
         try:
@@ -185,8 +189,12 @@ class QdrantVectorStoreManager:
             (ドキュメント, スコア)のタプルのリスト
 
         Raises:
+            ValueError: クエリが空の場合
             Exception: 検索に失敗した場合
         """
+        if not query or query.strip() == "":
+            raise ValueError("検索クエリが空です")
+
         k = k or config.rag.top_k
 
         try:

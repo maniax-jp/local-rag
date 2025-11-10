@@ -36,8 +36,8 @@ class JapaneseTextSplitter:
             chunk_overlap: チャンクオーバーラップ（Noneの場合は設定から取得）
             separators: セパレータリスト（Noneの場合はデフォルトを使用）
         """
-        self.chunk_size = chunk_size or config.rag.chunk_size
-        self.chunk_overlap = chunk_overlap or config.rag.chunk_overlap
+        self.chunk_size = chunk_size if chunk_size is not None else config.rag.chunk_size
+        self.chunk_overlap = chunk_overlap if chunk_overlap is not None else config.rag.chunk_overlap
         self.separators = separators or self.JAPANESE_SEPARATORS
 
         self._splitter = RecursiveCharacterTextSplitter(
