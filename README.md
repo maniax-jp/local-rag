@@ -1,11 +1,11 @@
 # Local RAG - 日本語対応ローカルLLMによるRAG推論実行環境
 
-OllamaとLlama-3-Swallow-8B-Instruct-v0.1を使用した、完全ローカル環境で動作する日本語対応RAGシステムです。
+OllamaとLlama-3.1-Swallow-8B-Instruct-v0.1を使用した、完全ローカル環境で動作する日本語対応RAGシステムです。
 
 ## 特徴
 
 - **完全ローカル実行**: 外部APIへの依存なし、プライベートデータを安全に処理
-- **日本語最適化**: Llama-3-Swallow-8B-Instruct-v0.1による高精度な日本語処理
+- **日本語最適化**: Llama-3.1-Swallow-8B-Instruct-v0.1による高精度な日本語処理
 - **GPU高速化対応**: NVIDIA GPU使用で推論速度が最大18倍向上
 - **Docker環境**: 簡単なセットアップと環境の再現性
 - **高性能ベクターDB**: Qdrantによる高速な類似度検索
@@ -16,7 +16,7 @@ OllamaとLlama-3-Swallow-8B-Instruct-v0.1を使用した、完全ローカル環
 
 | コンポーネント | 技術 |
 |------------|------|
-| LLM | Ollama + Llama-3-Swallow-8B-Instruct-v0.1 |
+| LLM | Ollama + Llama-3.1-Swallow-8B-Instruct-v0.1 (Q4_K_M量子化) |
 | 埋め込みモデル | nomic-embed-text |
 | ベクターDB | Qdrant |
 | フレームワーク | LangChain |
@@ -228,7 +228,7 @@ local-rag/
 # Ollama設定
 OLLAMA_HOST=ollama
 OLLAMA_PORT=11434
-OLLAMA_LLM_MODEL=mmnga/llama-3-swallow-8b-instruct-v0.1:q4_k_m
+OLLAMA_LLM_MODEL=hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.1-gguf:Q4_K_M
 OLLAMA_EMBED_MODEL=nomic-embed-text
 
 # Qdrant設定
@@ -265,7 +265,7 @@ MAX_TOKENS=2000
 docker logs local-rag-ollama
 
 # 手動でモデルをpull
-docker exec local-rag-ollama ollama pull mmnga/llama-3-swallow-8b-instruct-v0.1:q4_k_m
+docker exec local-rag-ollama ollama pull hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.1-gguf:Q4_K_M
 docker exec local-rag-ollama ollama pull nomic-embed-text
 ```
 
@@ -337,6 +337,6 @@ Issue、Pull Requestを歓迎します。
 ## 参考
 
 - [Ollama](https://ollama.ai/)
-- [Llama-3-Swallow](https://huggingface.co/tokyotech-llm/Llama-3-Swallow-8B-Instruct-v0.1)
+- [Llama-3.1-Swallow](https://huggingface.co/tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.1)
 - [Qdrant](https://qdrant.tech/)
 - [LangChain](https://www.langchain.com/)

@@ -69,7 +69,7 @@ class Config:
         return OllamaConfig(
             host=os.getenv("OLLAMA_HOST", "ollama"),
             port=int(os.getenv("OLLAMA_PORT", "11434")),
-            llm_model=os.getenv("OLLAMA_LLM_MODEL", "mmnga/llama-3-swallow-8b-instruct-v0.1:q4_k_m"),
+            llm_model=os.getenv("OLLAMA_LLM_MODEL", "hf.co/mmnga/tokyotech-llm-Llama-3.1-Swallow-8B-Instruct-v0.1-gguf:Q4_K_M"),
             embed_model=os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
         )
 
