@@ -38,7 +38,7 @@ OllamaとLlama-3.1-Swallow-8B-Instruct-v0.1を使用した、完全ローカル�
 ### 1. リポジトリのクローン
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/maniax-jp/local-rag.git
 cd local-rag
 ```
 
