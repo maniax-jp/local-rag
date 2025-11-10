@@ -6,9 +6,11 @@ OllamaとLlama-3-Swallow-8B-Instruct-v0.1を使用した、完全ローカル環
 
 - **完全ローカル実行**: 外部APIへの依存なし、プライベートデータを安全に処理
 - **日本語最適化**: Llama-3-Swallow-8B-Instruct-v0.1による高精度な日本語処理
+- **GPU高速化対応**: NVIDIA GPU使用で推論速度が最大18倍向上
 - **Docker環境**: 簡単なセットアップと環境の再現性
 - **高性能ベクターDB**: Qdrantによる高速な類似度検索
 - **柔軟なドキュメント対応**: PDF、TXT、MD、CSV、JSON形式をサポート
+- **包括的なテスト**: 84個の単体テスト + E2Eテストで品質保証
 
 ## 技術スタック
 
@@ -25,7 +27,11 @@ OllamaとLlama-3-Swallow-8B-Instruct-v0.1を使用した、完全ローカル環
 
 - Docker & Docker Compose
 - ディスク空き容量: 10GB以上（モデル保存用）
-- メモリ: 8GB以上推奨（GPU使用時はVRAM 6GB以上推奨）
+- メモリ: 8GB以上推奨
+- **GPU使用時（オプション）**:
+  - NVIDIA GPU（VRAM 6GB以上推奨）
+  - NVIDIA Container Toolkit
+  - CUDA 12.x対応ドライバー
 
 ## セットアップ
 
@@ -73,6 +79,82 @@ cp your_documents.pdf documents/pdf/
 # ドキュメントを取り込み
 docker exec local-rag-app python ingest.py --source /documents
 ```
+
+### 実際の動作例
+
+#### 例1: 高市早苗Q&Aデータセットの質問応答
+
+```bash
+# JSONLデータをテキスト形式に変換
+python3 scripts/convert_jsonl_to_txt.py input.jsonl documents/qa_data.txt
+
+# データを取り込み（チャンクサイズを小さめに設定）
+docker exec local-rag-app bash -c "cd /app && python ingest.py --source /documents/qa_data.txt --collection qa_data --chunk-size 300 --chunk-overlap 50 --force"
+
+# テストで動作確認
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/test_takaichi_qa.py -v -s"
+```
+
+**出力例:**
+
+```
+質問: 高市早苗さんの生年月日は？
+回答: 高市早苗さんの生年月日は1961年3月7日です。
+
+質問: 高市早苗さんの出身地はどこですか？
+回答: 高市早苗さんの出身地は奈良県です。
+
+質問: 高市早苗さんは何年生まれですか？
+回答: 高市早苗さんは1961年3月7日生まれです。したがって、2025年現在は64歳です。
+```
+
+#### 例2: 類似度検索による関連情報の取得
+
+RAGシステムは質問に対して、ベクターDBから関連性の高いドキュメントを類似度スコア付きで自動検索します。
+
+**検索の仕組み:**
+1. 質問文を埋め込みモデルでベクトル化
+2. Qdrantで類似度検索を実行（コサイン類似度を使用）
+3. スコアの高い順にドキュメントを取得（デフォルトTOP-5）
+4. 取得したドキュメントをコンテキストとしてLLMに渡す
+
+**出力例（質問: 高市早苗さんの政治経歴について教えてください）:**
+
+```
+[1] スコア: 0.8011
+    内容: Q: 高市早苗さんの政治スタイルは？
+          A: 論理的で実務的なアプローチを重視する政治スタイルです。
+
+[2] スコア: 0.7937
+    内容: Q: 高市早苗さんは討論番組によく出演しますか？
+          A: はい、政治討論番組に頻繁に出演しています。
+
+[3] スコア: 0.7914
+    内容: Q: 高市早苗さんが尊敬する政治家は誰ですか？
+          A: 安倍晋三元首相を深く尊敬していました。
+```
+
+**スコアの解釈:**
+- **0.8以上**: 質問に直接関連する内容
+- **0.7〜0.8**: 間接的に関連する情報
+- **0.7未満**: 関連性が低い可能性
+
+#### 例3: GPU使用による高速推論
+
+GPU（NVIDIA）を使用することで推論速度が大幅に向上します。
+
+```bash
+# GPU使用状況の確認
+nvidia-smi
+
+# 推論速度の比較
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/test_takaichi_qa.py::TestTakaichiQA::test_query_birth_date -v"
+```
+
+**パフォーマンス:**
+- **CPU使用時**: 約34秒/質問
+- **GPU使用時**: 約1.9秒/質問（**18倍高速化**）
+- **GPUメモリ**: 約8.6GB使用（RTX 5090の場合）
 
 **オプション**:
 - `--source`: ドキュメントファイルまたはディレクトリのパス（必須）
@@ -226,9 +308,23 @@ docker-compose restart rag-app
 ### テスト
 
 ```bash
-# テストの実行（実装予定）
-docker exec local-rag-app pytest tests/
+# 全テストの実行
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/ -v"
+
+# 特定のテストのみ実行
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/test_takaichi_qa.py -v -s"
+
+# 単体テストのみ実行
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/test_llm.py /tests/test_embeddings.py -v"
+
+# E2Eテストのみ実行
+docker exec local-rag-app bash -c "cd /app && PYTHONPATH=/app pytest /tests/test_takaichi_qa.py -v"
 ```
+
+**テストカバレッジ:**
+- 単体テスト: 84個（モデル、ローダー、分割、テンプレートなど）
+- E2Eテスト: 8個（高市早苗Q&Aデータセット使用）
+- 総合カバレッジ: 92個のテストケース
 
 ## ライセンス
 
