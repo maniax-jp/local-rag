@@ -1,0 +1,19 @@
+# LangChain関連
+langchain==0.3.13
+langchain-community==0.3.13
+langchain-ollama==0.2.3
+langchain-qdrant==0.2.1
+
+# ベクターデータベース
+qdrant-client==1.12.1
+
+# ドキュメントローダー
+pypdf==5.1.0
+
+# ユーティリティ
+python-dotenv==1.0.1
+
+# テスト
+pytest==8.3.4
+pytest-cov==6.0.0
+pytest-mock==3.14.0
